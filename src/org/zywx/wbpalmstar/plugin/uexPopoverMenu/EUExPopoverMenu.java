@@ -58,6 +58,7 @@ public class EUExPopoverMenu extends EUExBase {
     private boolean hasIcon = false;
     public static final String CALLBACK_ITEM_SELECTED = "uexPopoverMenu.cbItemSelected";
 
+    private String callbackId;
     public EUExPopoverMenu(Context context, EBrowserView eBrowserView) {
         super(context, eBrowserView);
         finder = ResoureFinder.getInstance(context);
@@ -73,6 +74,9 @@ public class EUExPopoverMenu extends EUExBase {
             return;
         }
         String json = params[0];
+        if (params.length == 2) {
+            callbackId = params[1];
+        }
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(json);
@@ -243,9 +247,13 @@ public class EUExPopoverMenu extends EUExBase {
     }
 
     private void callBackPluginJs(String methodName, String jsonData){
-        String js = SCRIPT_HEADER + "if(" + methodName + "){"
-                + methodName + "('" + jsonData + "');}";
-        onCallback(js);
+        if (!TextUtils.isEmpty(callbackId)) {
+            callbackToJs(Integer.parseInt(callbackId), false, Integer.parseInt(jsonData));
+        } else {
+            String js = SCRIPT_HEADER + "if(" + methodName + "){"
+                    + methodName + "('" + jsonData + "');}";
+            onCallback(js);
+        }
     }
 
 }
