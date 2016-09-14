@@ -31,6 +31,9 @@ android {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
     }
+    defaultConfig {
+        applicationId "com.uexpopovermenu.com"
+    }
 
     sourceSets {
         main {

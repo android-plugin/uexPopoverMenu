@@ -40,7 +40,6 @@ import org.zywx.wbpalmstar.base.BUtility;
 import org.zywx.wbpalmstar.base.ResoureFinder;
 import org.zywx.wbpalmstar.engine.EBrowserView;
 import org.zywx.wbpalmstar.engine.universalex.EUExBase;
-import org.zywx.wbpalmstar.engine.universalex.EUExCallback;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +57,7 @@ public class EUExPopoverMenu extends EUExBase {
 
     private boolean hasIcon = false;
     public static final String CALLBACK_ITEM_SELECTED = "uexPopoverMenu.cbItemSelected";
+    public static final String ON_ITEM_CLICKED = "uexPopoverMenu.onItemClicked";
 
     private String callbackId;
     public EUExPopoverMenu(Context context, EBrowserView eBrowserView) {
@@ -248,13 +248,12 @@ public class EUExPopoverMenu extends EUExBase {
     }
 
     private void callBackPluginJs(String methodName, String jsonData){
-        if (!TextUtils.isEmpty(callbackId)) {
-            callbackToJs(Integer.parseInt(callbackId), false, EUExCallback.F_C_SUCCESS, Integer.parseInt(jsonData));
-        } else {
-            String js = SCRIPT_HEADER + "if(" + methodName + "){"
-                    + methodName + "('" + jsonData + "');}";
-            onCallback(js);
-        }
+        String js = SCRIPT_HEADER + "if(" + methodName + "){"
+                + methodName + "(" + jsonData + ");}";
+        onCallback(js);
+        //针对4.0的回调
+        String callbackJs = SCRIPT_HEADER + "if(" + ON_ITEM_CLICKED + "){" + ON_ITEM_CLICKED + "(" + jsonData +");}";
+        onCallback(callbackJs);
     }
 
 }
